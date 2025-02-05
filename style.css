@@ -1,0 +1,100 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  margin: 20px;
+  background-color: #f4f4f4;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+#movie-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.movie-item {
+  border: 1px solid #ddd;
+  padding: 15px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  /* Use flexbox for layout */
+  align-items: flex-start;
+  /* Align items to the top */
+}
+
+.movie-image {
+  height: 215px;
+  /* Set image height */
+  width: auto;
+  /* Maintain aspect ratio */
+  margin-right: 20px;
+  /* Space between image and text */
+  border-radius: 5px 0 0 5px;
+  /* Rounded corners on the left side */
+}
+
+.movie-info {
+  /* New container for the text elements */
+  display: flex;
+  flex-direction: column;
+}
+
+.movie-item h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.movie-item p {
+  margin-bottom: 5px;
+  color: #666;
+}
+
+.ticket-button {
+  display: inline-flex;
+  padding: 10px 20px;
+  /* Increased padding */
+  background-color: #004085;
+  /* Blue background color */
+  color: white;
+  text-decoration: none;
+  /* Remove underline from link */
+  border-radius: 8px;
+  /* More rounded corners */
+  font-weight: 600;
+  /* Slightly bolder text */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  /* Smooth transitions */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  /* Subtle shadow */
+  border: none;
+  /* Remove default border */
+  cursor: pointer;
+  /* Indicate it's clickable */
+  margin-top: 20px;
+  align-items: center;
+  /* Vertically center content */
+  justify-content: center;
+  /* Horizontally center content */
+}
+
+.movie-item p {
+  display: flex;
+  /* Use flexbox for layout */
+  flex-direction: column;
+  /* Stack label and value vertically */
+  margin-bottom: 5px;
+}
+
+.movie-item p .label {
+  font-weight: bold;
+  color: #333;
+}
+
+.movie-item p .value {
+  color: #666;
+}
