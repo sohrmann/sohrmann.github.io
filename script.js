@@ -19,7 +19,7 @@ function displayMovies(jsonData) {
   filmsSpecials.forEach((film) => {
     if (film && film.fields && film.fields.sessions) {
       film.fields.sessions.forEach((session) => {
-        if (isValidSession(session) && isOmUSession(session)) {
+        if (isOmUSession(session)) {
           const movieDiv = createMovieElement(film, session);
           movieList.appendChild(movieDiv);
         }
@@ -28,18 +28,9 @@ function displayMovies(jsonData) {
   });
 }
 
-function isValidSession(session) {
-  return (
-    session.fields &&
-    session.fields.formats &&
-    session.fields.cinema &&
-    session.fields.cinema.fields &&
-    session.fields.cinema.fields.name
-  );
-}
-
 function isOmUSession(session) {
-  return session.fields.formats.includes("OmU");
+  const formats = session.fields.formats;
+  return formats.includes("OmU") || formats.includes("OV") || formats.includes("OmeU");
 }
 
 function createMovieElement(film, session) {
