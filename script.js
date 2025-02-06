@@ -59,6 +59,14 @@ function createMovieElement(film, session) {
 
   const title = document.createElement("h3");
   title.textContent = film.fields.title;
+
+  const button = document.createElement("a");
+  button.href = `https://www.yorck.de/checkout/platzwahl?sessionid=${session.sys.id}`;
+  button.textContent = "Buy Tickets";
+  button.target = "_blank";
+  button.className = "ticket-button";
+  title.appendChild(button);
+
   movieInfoDiv.appendChild(title);
 
   const day = document.createElement("p");
@@ -78,13 +86,6 @@ function createMovieElement(film, session) {
   const formattedRuntime = formatRuntime(film.fields.runtime);
   time.innerHTML = `<span class="label">Time</span> <span class="value">${formattedTime} (${formattedRuntime})</span>`;
   movieInfoDiv.appendChild(time);
-
-  const button = document.createElement("a");
-  button.href = `https://www.yorck.de/checkout/platzwahl?sessionid=${session.sys.id}`;
-  button.textContent = "Buy Tickets";
-  button.target = "_blank";
-  button.className = "ticket-button";
-  movieInfoDiv.appendChild(button);
 
   movieDiv.appendChild(movieInfoDiv);
   return movieDiv;
