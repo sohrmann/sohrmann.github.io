@@ -2,7 +2,6 @@ function displayMovies(jsonData) {
   const movieList = document.getElementById("movie-list");
   movieList.innerHTML = "";
 
-  // Early return if data is missing to avoid nested if statements
   if (
     !jsonData ||
     !jsonData.props ||
@@ -30,7 +29,11 @@ function displayMovies(jsonData) {
 
 function isOmUSession(session) {
   const formats = session.fields.formats;
-  return formats.includes("OmU") || formats.includes("OV") || formats.includes("OmeU");
+  return (
+    formats.includes("OmU") ||
+    formats.includes("OV") ||
+    formats.includes("OmeU")
+  );
 }
 
 function createMovieElement(film, session) {
@@ -39,7 +42,7 @@ function createMovieElement(film, session) {
 
   if (film.fields.heroImage) {
     const image = document.createElement("img");
-    image.src = "https:" + film.fields.heroImage.fields.image.fields.file.url;
+    image.src = `https:${film.fields.heroImage.fields.image.fields.file.url}`;
     image.alt = film.fields.title;
     image.className = "movie-image";
     movieDiv.appendChild(image);
@@ -49,7 +52,12 @@ function createMovieElement(film, session) {
   movieInfoDiv.className = "movie-info";
 
   const title = document.createElement("h3");
-  title.textContent = film.fields.title;
+  const link = document.createElement("a");
+  link.textContent = film.fields.title;
+  link.href = `https://www.yorck.de/filme/${film.fields.slug}`;
+  link.target = "_blank";
+  link.className = "movie-link";
+  title.appendChild(link);
 
   const button = document.createElement("a");
   button.href = `https://www.yorck.de/checkout/platzwahl?sessionid=${session.sys.id}`;
@@ -65,7 +73,6 @@ function createMovieElement(film, session) {
   const dayOfWeek = getDayOfWeek(startTime.getDay());
   const startDate = startTime.toLocaleDateString("de-DE");
 
-  // Added span elements for labels and values
   day.innerHTML = `<span class="label">Date</span> <span class="value">${dayOfWeek}, ${startDate}</span>`;
   movieInfoDiv.appendChild(day);
 

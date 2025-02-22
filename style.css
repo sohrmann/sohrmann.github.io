@@ -23,38 +23,47 @@ h1 {
   background-color: white;
   border-radius: 5px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-  display: flex; /* Key change: Use flexbox for horizontal layout */
+  display: flex;
+  /* Key change: Use flexbox for horizontal layout */
   flex-direction: row;
-  align-items: flex-start; /* Align items to the top of the container */
+  align-items: flex-start;
+  /* Align items to the top of the container */
 }
 
 .movie-image {
-  width: auto; /* Set a fixed width for the image */
+  width: auto;
+  /* Set a fixed width for the image */
   height: 215px;
   object-fit: cover;
   border-radius: 5px;
-  margin-right: 20px; /* Add some space between image and text */
+  margin-right: 20px;
+  /* Add some space between image and text */
   margin-top: 8px;
 }
 
 .movie-info {
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Allow the text content to expand */
+  flex-grow: 1;
+  /* Allow the text content to expand */
 }
 
 .movie-item h3 {
   font-size: 2.5rem;
   font-weight: 700;
-  margin: 8px 0; /* Reset left/right margins */
-  display: flex; /* Use flexbox for title and button */
-  align-items: center; /* Vertically align title and button */
+  margin: 8px 0;
+  /* Reset left/right margins */
+  display: flex;
+  /* Use flexbox for title and button */
+  align-items: center;
+  /* Vertically align title and button */
 }
 
 .movie-item p {
   display: flex;
   flex-direction: column;
-  margin: 8px 0; /* Reset left/right margins */
+  margin: 8px 0;
+  /* Reset left/right margins */
   line-height: 1.2;
 }
 
@@ -67,17 +76,23 @@ h1 {
   color: #444;
 }
 
-.movie-info h3 .ticket-button { /* Target the button specifically within the h3 */
-  margin-left: 20px; /* Space between title and button */
-  padding: 10px; /* Smaller padding */
-  font-size: 0.8rem; /* Even smaller font */
+.movie-info h3 .ticket-button {
+  margin-left: 20px;
+  padding: 10px;
+  font-size: 0.8rem;
   font-weight: 400;
-  border-radius: 4px; /* More rounded */
-  background-color: #8FBC8F; /*Keep the original color*/
+  border-radius: 4px;
+  background-color: #8FBC8F;
   color: white;
   text-decoration: none;
   border: none;
   cursor: pointer;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
   transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.movie-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
