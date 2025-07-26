@@ -28,7 +28,7 @@ function displayMovies(jsonData) {
 }
 
 function isOmUSession(session) {
-  const formats = session.fields.formats;
+  const formats = session.fields.formats || [];
   return (
     formats.includes("OmU") ||
     formats.includes("OV") ||
