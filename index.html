@@ -1,12 +1,150 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>🎞️ OmU Movies @ Blauer Stern</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CineBubs | OmU & OV Showtimes @ Blauer Stern & Kino International</title>
+    <meta name="description" content="Explore original version (OmU, OV, OmeU) movie showtimes and buy tickets for Blauer Stern and Kino International in Berlin. High-end, fast, and real-time." />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <!-- Emoji Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🎞️</text></svg>" />
+    
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>🎞️ OmU Movies @ Blauer Stern</h1>
-    <div id="movie-list"></div>
+    <div class="container">
+      <!-- Header -->
+      <header class="main-header">
+        <div class="brand">
+          <span class="brand-emoji">🎞️</span>
+          <div>
+            <h1>CINE<span class="gradient-text">BUBS</span></h1>
+            <p class="brand-tagline">Find original version (OmU / OV / OmeU) movies & showtimes for Blauer Stern & Kino International</p>
+          </div>
+        </div>
+        
+        <div id="stats-counter" class="stats-counter hidden">
+          <span class="stats-badge" id="stats-movies-count">0 Movies</span>
+          <span class="stats-badge" id="stats-sessions-count">0 Showtimes</span>
+        </div>
+      </header>
+
+      <!-- Error Notification Area -->
+      <div id="error-container" class="error-container hidden"></div>
+
+      <!-- Filters Panel -->
+      <section class="filter-panel" aria-label="Filter showtimes">
+        <!-- Search and Format Filters -->
+        <div class="filter-row top-row">
+          <div class="search-wrapper">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input type="text" id="search-input" placeholder="Search by title, genre, or keyword..." aria-label="Search movies" />
+          </div>
+          
+          <div class="format-filters-wrapper">
+            <span class="filter-label">Formats:</span>
+            <div class="format-chips">
+              <button class="chip-toggle active" data-format="OmU" id="btn-fmt-omu">OmU</button>
+              <button class="chip-toggle active" data-format="OV" id="btn-fmt-ov">OV</button>
+              <button class="chip-toggle active" data-format="OmeU" id="btn-fmt-omeu">OmeU</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cinema Selector -->
+        <div class="filter-row">
+          <div class="cinema-selector-wrapper">
+            <span class="filter-label">Cinemas:</span>
+            <div class="cinema-tabs">
+              <button class="cinema-tab active" data-cinema="all" id="tab-cinema-all">All Cinemas</button>
+              <button class="cinema-tab" data-cinema="blauer-stern" id="tab-cinema-blauer-stern">
+                <span class="tab-indicator blauer-stern"></span>Blauer Stern
+              </button>
+              <button class="cinema-tab" data-cinema="kino-international" id="tab-cinema-kino-international">
+                <span class="tab-indicator kino-international"></span>Kino International
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date Selector -->
+        <div class="filter-row date-row">
+          <div class="date-selector-wrapper">
+            <span class="filter-label">Show Date:</span>
+            <div class="date-scroll" id="date-scroll-container">
+              <!-- Dynamically populated date tabs -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Content Area -->
+      <main>
+        <!-- Skeleton Loading State -->
+        <div id="skeleton-loader" class="movie-grid">
+          <div class="skeleton-card">
+            <div class="skeleton-image-holder"></div>
+            <div class="skeleton-info-holder">
+              <div class="skeleton-line title"></div>
+              <div class="skeleton-line meta"></div>
+              <div class="skeleton-line tagline"></div>
+              <div class="skeleton-line sessions"></div>
+            </div>
+          </div>
+          <div class="skeleton-card">
+            <div class="skeleton-image-holder"></div>
+            <div class="skeleton-info-holder">
+              <div class="skeleton-line title"></div>
+              <div class="skeleton-line meta"></div>
+              <div class="skeleton-line tagline"></div>
+              <div class="skeleton-line sessions"></div>
+            </div>
+          </div>
+          <div class="skeleton-card">
+            <div class="skeleton-image-holder"></div>
+            <div class="skeleton-info-holder">
+              <div class="skeleton-line title"></div>
+              <div class="skeleton-line meta"></div>
+              <div class="skeleton-line tagline"></div>
+              <div class="skeleton-line sessions"></div>
+            </div>
+          </div>
+          <div class="skeleton-card">
+            <div class="skeleton-image-holder"></div>
+            <div class="skeleton-info-holder">
+              <div class="skeleton-line title"></div>
+              <div class="skeleton-line meta"></div>
+              <div class="skeleton-line tagline"></div>
+              <div class="skeleton-line sessions"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status State (Empty / Error) -->
+        <div id="status-state" class="status-state hidden">
+          <div id="status-icon" class="status-icon">🎬</div>
+          <h3 id="status-title">No screenings found</h3>
+          <p id="status-message">Try clearing filters or checking another date.</p>
+          <button id="status-action-btn" class="btn-clear">Reset Filters</button>
+        </div>
+
+        <!-- Movies List -->
+        <div id="movie-list" class="movie-grid hidden"></div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="main-footer">
+        <p>Data retrieved in real-time from <a href="https://www.yorck.de" target="_blank" rel="noopener">yorck.de</a></p>
+        <p class="footer-sub">This site is an independent project and not affiliated with Yorck Kinogruppe.</p>
+      </footer>
+    </div>
 
     <script src="script.js"></script>
   </body>
