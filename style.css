@@ -625,6 +625,20 @@ body {
   min-width: 65px;
 }
 
+.showtime-pill .pill-date-label {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  font-weight: 700;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.showtime-pill .pill-time-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
 .showtime-pill .format-tag {
   font-size: 0.6rem;
   color: var(--text-secondary);

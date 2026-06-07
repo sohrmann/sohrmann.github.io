@@ -642,10 +642,19 @@ function createMovieCard(movie) {
       
       const formatsStr = session.formats.join(", ");
 
-      pill.innerHTML = `
-        <span>${timeStr}</span>
-        <span class="format-tag">${formatsStr}</span>
-      `;
+      if (state.filters.date === "all") {
+        const dayLabel = session.startTime.toLocaleDateString("en-US", { weekday: "short", day: "numeric" });
+        pill.innerHTML = `
+          <span class="pill-date-label">${dayLabel}</span>
+          <span class="pill-time-value">${timeStr}</span>
+          <span class="format-tag">${formatsStr}</span>
+        `;
+      } else {
+        pill.innerHTML = `
+          <span>${timeStr}</span>
+          <span class="format-tag">${formatsStr}</span>
+        `;
+      }
       list.appendChild(pill);
     });
 
