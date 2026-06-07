@@ -213,6 +213,47 @@ function isOmUSession(session) {
   return formats.some(f => ["OmU", "OV", "OmeU"].includes(f));
 }
 
+function parseCinemaDate(dateStr) {
+  // Extract YYYY, MM, DD, HH, MM as wall-clock values to ignore timezone/DST shifts
+  const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  if (match) {
+    const [_, year, month, day, hour, minute] = match.map(Number);
+    return new Date(year, month - 1, day, hour, minute);
+  }
+  return new Date(dateStr);
+}
+
+function findExistingMovie(movieMap, fields) {
+  const slug = fields.slug || fields.title;
+  if (movieMap.has(slug)) return movieMap.get(slug);
+
+  const titleNorm = (fields.title || "").toLowerCase().trim();
+  const rawSessionIds = (fields.sessions || []).map(s => s?.sys?.id).filter(Boolean);
+
+  for (const existingMovie of movieMap.values()) {
+    // 1. Match by VistaId
+    if (fields.vistaId && existingMovie.vistaId && fields.vistaId === existingMovie.vistaId) {
+      return existingMovie;
+    }
+
+    // 2. Match by shared raw session IDs
+    const sharesSession = rawSessionIds.some(id => existingMovie.rawSessionIds.has(id));
+    if (sharesSession) {
+      return existingMovie;
+    }
+
+    // 3. Match by similar titles (e.g. "Special Screening: Same Sun" vs "Same Sun")
+    const existingTitleNorm = existingMovie.title.toLowerCase().trim();
+    if (existingTitleNorm && titleNorm) {
+      if (existingTitleNorm.includes(titleNorm) || titleNorm.includes(existingTitleNorm)) {
+        return existingMovie;
+      }
+    }
+  }
+
+  return null;
+}
+
 function processCinemaData(results) {
   const movieMap = new Map();
   const errors = [];
@@ -234,34 +275,63 @@ function processCinemaData(results) {
 
       const fields = film.fields;
       const slug = fields.slug || fields.title;
+      
+      const existingMovie = findExistingMovie(movieMap, fields);
+      let movie;
 
-      if (!movieMap.has(slug)) {
-        movieMap.set(slug, {
+      if (existingMovie) {
+        movie = existingMovie;
+        // Merge metadata: prefer the one with VistaId
+        if (!movie.vistaId && fields.vistaId) movie.vistaId = fields.vistaId;
+        // Keep the cleaner/shorter title (e.g., "Same Sun" instead of "Special Screening: Same Sun")
+        if (fields.title && fields.title.length < movie.title.length) {
+          movie.title = fields.title;
+          movie.slug = fields.slug || movie.slug;
+        }
+        if (!movie.heroImage && fields.heroImage) movie.heroImage = fields.heroImage;
+        if (movie.fsk === null && fields.fsk !== undefined) movie.fsk = fields.fsk;
+        if (!movie.mainLabel && fields.mainLabel) movie.mainLabel = fields.mainLabel;
+        if (!movie.tagline && fields.tagline) movie.tagline = fields.tagline;
+      } else {
+        movie = {
           title: fields.title,
           slug: fields.slug,
+          vistaId: fields.vistaId || null,
           runtime: fields.runtime,
           mainLabel: fields.mainLabel || "",
           tagline: fields.tagline || "",
           fsk: fields.fsk !== undefined ? fields.fsk : null,
           yorckPick: fields.yorckPick || false,
           heroImage: fields.heroImage || null,
-          sessions: []
-        });
+          sessions: [],
+          rawSessionIds: new Set()
+        };
+        movieMap.set(slug, movie);
       }
 
-      const movie = movieMap.get(slug);
-
+      // Track all raw session IDs for future deduplication matching
       if (fields.sessions && Array.isArray(fields.sessions)) {
+        fields.sessions.forEach(session => {
+          if (session?.sys?.id) {
+            movie.rawSessionIds.add(session.sys.id);
+          }
+        });
+
+        // Add sessions to the movie list
         fields.sessions.forEach(session => {
           if (!session || !session.fields) return;
 
           if (isOmUSession(session)) {
-            // Keep unique sessions
-            const sessionExists = movie.sessions.some(s => s.id === session.sys.id);
+            const parsedStartTime = parseCinemaDate(session.fields.startTime);
+            // Deduplicate by cinema and start time
+            const sessionExists = movie.sessions.some(s => 
+              s.cinemaId === cinema.id && 
+              s.startTime.getTime() === parsedStartTime.getTime()
+            );
             if (!sessionExists) {
               movie.sessions.push({
                 id: session.sys.id,
-                startTime: new Date(session.fields.startTime),
+                startTime: parsedStartTime,
                 formats: session.fields.formats || [],
                 cinemaId: cinema.id,
                 cinemaName: cinema.name
