@@ -29,12 +29,23 @@ let state = {
 // --- Initializer & Event Listeners ---
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
+  registerServiceWorker();
 });
 
 async function initApp() {
   setupFilterListeners();
   renderDateTabs();
   await loadCinemaData();
+}
+
+function registerServiceWorker() {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js")
+        .then(reg => console.log("Service Worker registered successfully"))
+        .catch(err => console.error("Service Worker registration failed", err));
+    });
+  }
 }
 
 function setupFilterListeners() {
