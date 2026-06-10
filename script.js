@@ -445,14 +445,15 @@ function renderDateTabs() {
   });
 
   // Custom Date Picker tab
-  const pickerLabel = document.createElement("label");
-  pickerLabel.className = "date-tab date-picker-tab";
-  pickerLabel.id = "custom-date-tab";
+  const pickerButton = document.createElement("button");
+  pickerButton.className = "date-tab date-picker-tab";
+  pickerButton.id = "custom-date-tab";
+  pickerButton.type = "button";
 
   const pickerText = document.createElement("span");
   pickerText.id = "custom-date-label";
   pickerText.textContent = "📅 Other Date";
-  pickerLabel.appendChild(pickerText);
+  pickerButton.appendChild(pickerText);
 
   const pickerInput = document.createElement("input");
   pickerInput.type = "date";
@@ -474,15 +475,23 @@ function renderDateTabs() {
       
       const tabs = document.querySelectorAll(".date-tab");
       tabs.forEach(t => t.classList.remove("active"));
-      pickerLabel.classList.add("active");
+      pickerButton.classList.add("active");
       
       state.filters.date = selectedDate;
       renderMovies();
     }
   });
 
-  pickerLabel.appendChild(pickerInput);
-  container.appendChild(pickerLabel);
+  pickerButton.addEventListener("click", () => {
+    if (typeof pickerInput.showPicker === "function") {
+      pickerInput.showPicker();
+    } else {
+      pickerInput.click();
+    }
+  });
+
+  pickerButton.appendChild(pickerInput);
+  container.appendChild(pickerButton);
 }
 
 function handleDateTabClick(clickedTab, dateValue) {

@@ -2,8 +2,8 @@ const CACHE_NAME = "cinebubs-precache";
 const PRECACHE_MANIFEST = [
   { url: "./", revision: "1.0.6" },
   { url: "./index.html", revision: "1.0.6" },
-  { url: "./style.css", revision: "1.0.6" },
-  { url: "./script.js", revision: "1.0.6" },
+  { url: "./style.css", revision: "1.0.9" },
+  { url: "./script.js", revision: "1.0.8" },
   { url: "./icon-192.png", revision: "1.0.0" },
   { url: "./icon-512.png", revision: "1.0.0" }
 ];

@@ -394,6 +394,7 @@ body {
   white-space: nowrap;
   transition: all var(--transition-fast);
   box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
 }
 
 .date-tab:hover {
@@ -422,16 +423,20 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .date-picker-tab input[type="date"] {
   position: absolute;
-  opacity: 0;
-  left: 0;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
+  opacity: 0;
+  border: none;
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
   cursor: pointer;
 }
 
