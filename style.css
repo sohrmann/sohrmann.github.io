@@ -330,6 +330,7 @@ body {
   align-items: center;
   gap: 8px;
   transition: all var(--transition-fast);
+  text-align: left;
 }
 
 .cinema-tab:hover {
