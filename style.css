@@ -416,6 +416,25 @@ body {
   box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3);
 }
 
+.date-picker-tab {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.date-picker-tab input[type="date"] {
+  position: absolute;
+  opacity: 0;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
 /* Movie Grid */
 .movie-grid {
   display: grid;

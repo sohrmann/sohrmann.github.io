@@ -146,6 +146,12 @@ function resetFilters() {
     }
   });
 
+  // Reset custom date picker
+  const customLabel = document.getElementById("custom-date-label");
+  const customInput = document.getElementById("custom-date-input");
+  if (customLabel) customLabel.textContent = "📅 Other Date";
+  if (customInput) customInput.value = "";
+
   renderMovies();
 }
 
@@ -437,12 +443,61 @@ function renderDateTabs() {
     tab.addEventListener("click", () => handleDateTabClick(tab, d.value));
     container.appendChild(tab);
   });
+
+  // Custom Date Picker tab
+  const pickerLabel = document.createElement("label");
+  pickerLabel.className = "date-tab date-picker-tab";
+  pickerLabel.id = "custom-date-tab";
+
+  const pickerText = document.createElement("span");
+  pickerText.id = "custom-date-label";
+  pickerText.textContent = "📅 Other Date";
+  pickerLabel.appendChild(pickerText);
+
+  const pickerInput = document.createElement("input");
+  pickerInput.type = "date";
+  pickerInput.id = "custom-date-input";
+  pickerInput.min = getLocalDateString(new Date());
+  
+  pickerInput.addEventListener("change", (e) => {
+    const selectedDate = e.target.value;
+    if (selectedDate) {
+      // Parse the selected date YYYY-MM-DD
+      const dateParts = selectedDate.split("-");
+      const year = parseInt(dateParts[0], 10);
+      const month = parseInt(dateParts[1], 10) - 1;
+      const day = parseInt(dateParts[2], 10);
+      const dateObj = new Date(year, month, day);
+      
+      const formattedDate = dateObj.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      pickerText.textContent = `📅 ${formattedDate}`;
+      
+      const tabs = document.querySelectorAll(".date-tab");
+      tabs.forEach(t => t.classList.remove("active"));
+      pickerLabel.classList.add("active");
+      
+      state.filters.date = selectedDate;
+      renderMovies();
+    }
+  });
+
+  pickerLabel.appendChild(pickerInput);
+  container.appendChild(pickerLabel);
 }
 
 function handleDateTabClick(clickedTab, dateValue) {
   const tabs = document.querySelectorAll(".date-tab");
   tabs.forEach(t => t.classList.remove("active"));
   clickedTab.classList.add("active");
+
+  // Reset custom date picker if a regular tab is clicked
+  const customLabel = document.getElementById("custom-date-label");
+  const customInput = document.getElementById("custom-date-input");
+  if (clickedTab.id !== "custom-date-tab") {
+    if (customLabel) customLabel.textContent = "📅 Other Date";
+    if (customInput) customInput.value = "";
+  }
+
   state.filters.date = dateValue;
   renderMovies();
 }
