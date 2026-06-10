@@ -21,11 +21,13 @@
   --text-secondary: #475569; 
   --text-muted: #94a3b8; 
   
-  /* Cinema Accents - Blauer Stern (Blue), Kino International (Pink) */
+  /* Cinema Accents - Blauer Stern (Blue), Kino International (Pink), Filmtheater am Friedrichshain (Green) */
   --blauer-stern: #2563eb; /* Blue-600 */
   --blauer-stern-bg: rgba(37, 99, 235, 0.06);
   --kino-international: #db2777; /* Pink-600 */
   --kino-international-bg: rgba(219, 39, 119, 0.06);
+  --filmtheater-am-friedrichshain: #059669; /* Emerald-600 */
+  --filmtheater-am-friedrichshain-bg: rgba(5, 150, 105, 0.06);
   
   /* Shadows & Radius */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.02);
@@ -357,6 +359,11 @@ body {
   box-shadow: 0 0 6px rgba(219, 39, 119, 0.4);
 }
 
+.tab-indicator.filmtheater-am-friedrichshain {
+  background: var(--filmtheater-am-friedrichshain);
+  box-shadow: 0 0 6px rgba(5, 150, 105, 0.4);
+}
+
 /* Date Selector Scroll */
 .date-selector-wrapper {
   display: flex;
@@ -593,6 +600,7 @@ body {
 
 .cinema-title.blauer-stern { color: var(--blauer-stern); }
 .cinema-title.kino-international { color: var(--kino-international); }
+.cinema-title.filmtheater-am-friedrichshain { color: var(--filmtheater-am-friedrichshain); }
 
 .cinema-dot {
   width: 6px;
@@ -601,11 +609,13 @@ body {
 }
 .cinema-dot.blauer-stern { background: var(--blauer-stern); }
 .cinema-dot.kino-international { background: var(--kino-international); }
+.cinema-dot.filmtheater-am-friedrichshain { background: var(--filmtheater-am-friedrichshain); }
 
 .showtimes-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px 6px;
+  align-items: flex-start;
 }
 
 .showtime-pill {
@@ -623,6 +633,8 @@ body {
   font-weight: 600;
   transition: all var(--transition-fast);
   min-width: 65px;
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
 .showtime-pill .pill-date-label {
@@ -661,6 +673,14 @@ body {
   color: var(--kino-international);
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(219, 39, 119, 0.1);
+}
+
+.showtime-pill.filmtheater-am-friedrichshain-pill:hover {
+  background: var(--filmtheater-am-friedrichshain-bg);
+  border-color: var(--filmtheater-am-friedrichshain);
+  color: var(--filmtheater-am-friedrichshain);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.1);
 }
 
 /* Skeleton Loaders Styling */

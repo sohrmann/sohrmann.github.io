@@ -3,14 +3,20 @@ const CINEMAS = [
   {
     id: "blauer-stern",
     name: "Blauer Stern",
-    url: "https://www.yorck.de/kinos/blauer-stern",
+    url: "https://www.yorck.de/en/cinemas/blauer-stern",
     color: "#2563eb"
   },
   {
     id: "kino-international",
     name: "Kino International",
-    url: "https://www.yorck.de/kinos/kino-international",
+    url: "https://www.yorck.de/en/cinemas/kino-international",
     color: "#db2777"
+  },
+  {
+    id: "filmtheater-am-friedrichshain",
+    name: "Filmtheater am Friedrichshain",
+    url: "https://www.yorck.de/en/cinemas/filmtheater-am-friedrichshain",
+    color: "#059669"
   }
 ];
 
@@ -667,7 +673,7 @@ function createMovieCard(movie) {
   title.className = "movie-title";
   const titleLink = document.createElement("a");
   titleLink.textContent = movie.title;
-  titleLink.href = movie.slug ? `https://www.yorck.de/filme/${movie.slug}` : "#";
+  titleLink.href = movie.slug ? `https://www.yorck.de/en/films/${movie.slug}` : "#";
   titleLink.target = "_blank";
   titleLink.rel = "noopener";
   title.appendChild(titleLink);
@@ -712,7 +718,7 @@ function createMovieCard(movie) {
     cinemaSessions.forEach(session => {
       const pill = document.createElement("a");
       pill.className = `showtime-pill ${cinema.id}-pill`;
-      pill.href = `https://www.yorck.de/checkout/platzwahl?sessionid=${session.id}`;
+      pill.href = `https://www.yorck.de/en/checkout/platzwahl?sessionid=${session.id}`;
       pill.target = "_blank";
       pill.rel = "noopener";
 
