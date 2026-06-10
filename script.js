@@ -185,13 +185,7 @@ async function loadCinemaData() {
 
   showSkeletons(false);
   
-  // Show/Hide Stats Counter
-  const statsCounter = document.getElementById("stats-counter");
-  if (state.movies.length > 0) {
-    statsCounter.classList.remove("hidden");
-  } else {
-    statsCounter.classList.add("hidden");
-  }
+
 
   renderMovies();
 }
@@ -554,10 +548,7 @@ function renderMovies() {
 
   movieList.innerHTML = "";
 
-  // Update counters
-  const totalSessions = movies.reduce((sum, m) => sum + m.sessions.length, 0);
-  document.getElementById("stats-movies-count").textContent = `${movies.length} Movie${movies.length !== 1 ? 's' : ''}`;
-  document.getElementById("stats-sessions-count").textContent = `${totalSessions} Showtime${totalSessions !== 1 ? 's' : ''}`;
+
 
   if (movies.length === 0) {
     movieList.classList.add("hidden");
