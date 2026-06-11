@@ -64,7 +64,7 @@ body {
 }
 
 .brand-logo {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.15em;
   color: var(--text-primary);
@@ -86,7 +86,7 @@ body {
 }
 
 .brand-subtitle {
-  font-size: 0.52rem;
+  font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   color: var(--text-secondary);
@@ -103,7 +103,7 @@ body {
 
 .date-range-display {
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: var(--text-primary);
   letter-spacing: -0.01em;
@@ -115,7 +115,7 @@ body {
   border: none;
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   cursor: pointer;
   padding: 0.15rem 0.35rem;
   transition: all var(--transition-speed);
@@ -125,90 +125,6 @@ body {
   color: var(--accent-orange);
 }
 
-.filters-section {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-}
-
-.filter-item {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.filter-label {
-  font-size: 0.55rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-}
-
-.pill-group {
-  display: flex;
-  gap: 0.15rem;
-}
-
-.pill {
-  background: none;
-  border: 1px solid var(--border-color);
-  background-color: var(--bg-primary);
-  color: var(--text-secondary);
-  font-size: 0.68rem;
-  font-weight: 500;
-  padding: 0.15rem 0.4rem;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all var(--transition-speed) ease;
-}
-
-.pill:hover {
-  border-color: var(--text-secondary);
-  color: var(--text-primary);
-}
-
-.pill.active {
-  background-color: var(--accent-orange);
-  border-color: var(--accent-orange);
-  color: white;
-}
-
-.custom-select {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 3px;
-  padding: 0.15rem 1.25rem 0.15rem 0.4rem;
-  font-family: var(--font-sans);
-  font-size: 0.68rem;
-  font-weight: 500;
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B6A66'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.3rem center;
-  background-size: 0.65rem;
-  transition: all var(--transition-speed);
-}
-
-.custom-select:hover {
-  border-color: var(--text-secondary);
-}
-
-.custom-select:focus {
-  outline: none;
-  border-color: var(--accent-orange);
-}
-
-.custom-select:hover {
-  border-color: var(--text-secondary);
-}
-
-.custom-select:focus {
-  outline: none;
-  border-color: var(--accent-orange);
-}
 
 /* Loading and Error States */
 .loading-state, .error-state {
@@ -291,7 +207,7 @@ body {
 }
 
 .day-name {
-  font-size: 0.58rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   color: var(--text-secondary);
@@ -304,7 +220,7 @@ body {
 
 .day-date {
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 1.15rem;
   font-weight: 600;
   margin-top: 0.02rem;
   color: var(--text-primary);
@@ -322,18 +238,8 @@ body {
   display: none;
 }
 
-.placeholder-time {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  opacity: 0.25;
-  padding-left: 0.35rem;
-  display: inline-block;
-  line-height: 1;
-}
 
-/* Desktop aligned 7-column Week View */
+/* Desktop aligned 4-column Week View */
 @media (min-width: 1024px) {
   .app-container {
     height: 100vh;
@@ -341,7 +247,7 @@ body {
 
   .schedule-columns-grid {
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-rows: auto;
     grid-auto-rows: 1fr;
     column-gap: 0.4rem;
@@ -376,7 +282,7 @@ body {
     border: 1px solid rgba(26, 26, 25, 0.04);
     border-radius: 3px;
     height: 100%;
-    min-height: 1.8rem;
+    min-height: 2.5rem;
   }
 
   .no-classes-msg {
@@ -396,7 +302,7 @@ body {
   transition: all var(--transition-speed) ease;
   position: relative;
   border-radius: 3px;
-  min-height: 1.8rem;
+  min-height: 2.5rem;
   justify-content: center;
 }
 
@@ -434,7 +340,7 @@ body {
 
 .class-time {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--text-secondary);
   line-height: 1;
@@ -446,7 +352,7 @@ body {
 }
 
 .class-title {
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -468,7 +374,7 @@ body {
 }
 
 .class-instructor {
-  font-size: 0.76rem;
+  font-size: 0.98rem;
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.1;
@@ -482,7 +388,7 @@ body {
 /* Spots Badge */
 .spots-badge {
   font-family: var(--font-mono);
-  font-size: 0.58rem;
+  font-size: 0.7rem;
   color: var(--text-secondary);
   background-color: var(--bg-secondary);
   padding: 0.02rem 0.2rem;
@@ -564,11 +470,6 @@ body {
   .nav-section {
     justify-content: center;
   }
-  
-  .filters-section {
-    justify-content: center;
-    gap: 0.5rem;
-  }
 }
 
 @media (max-width: 600px) {
@@ -582,25 +483,5 @@ body {
   
   .brand-logo {
     font-size: 1.1rem;
-  }
-  
-  .filters-section {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.3rem;
-  }
-  
-  .filter-item {
-    justify-content: space-between;
-  }
-  
-  .pill-group {
-    flex-grow: 1;
-    justify-content: flex-end;
-  }
-  
-  .custom-select {
-    flex-grow: 1;
-    text-align: right;
   }
 }

@@ -27,40 +27,12 @@
 
       <!-- Middle: Date display & Navigation buttons -->
       <div class="nav-section">
+        <button id="btn-today" class="text-btn" aria-label="Go to Today">[ TODAY ]</button>
         <button id="btn-prev" class="text-btn" aria-label="Previous Week">[ PREV ]</button>
         <span class="date-range-display" id="date-range-display">Loading dates...</span>
-        <button id="btn-today" class="text-btn" aria-label="Go to Today">[ TODAY ]</button>
         <button id="btn-next" class="text-btn" aria-label="Next Week">[ NEXT ]</button>
       </div>
 
-      <!-- Right side: Filters & View Switcher -->
-      <div class="filters-section">
-        <div class="filter-item">
-          <span class="filter-label">TYPE:</span>
-          <div class="pill-group" id="filter-type">
-            <button class="pill active" data-type="all">All</button>
-            <button class="pill" data-type="fitness">Regular</button>
-            <button class="pill" data-type="special">Special</button>
-          </div>
-        </div>
-
-        <div class="filter-item">
-          <span class="filter-label">TEACHER:</span>
-          <select id="filter-teacher" class="custom-select">
-            <option value="all">All</option>
-          </select>
-        </div>
-
-        <div class="filter-item">
-          <span class="filter-label">SPOTS:</span>
-          <div class="pill-group" id="filter-spots">
-            <button class="pill active" data-spots="all">All</button>
-            <button class="pill" data-spots="available">Avail</button>
-          </div>
-        </div>
-
-
-      </div>
     </header>
 
     <!-- Loading State -->

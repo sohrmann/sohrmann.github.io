@@ -5,11 +5,6 @@ currentDate.setHours(0, 0, 0, 0);
 
 let allSessions = [];
 let filteredSessions = [];
-let activeFilters = {
-  type: 'all',
-  teacher: 'all',
-  spots: 'all'
-};
 
 
 // API Configurations
@@ -22,9 +17,6 @@ const dateRangeDisplay = document.getElementById('date-range-display');
 const btnPrev = document.getElementById('btn-prev');
 const btnToday = document.getElementById('btn-today');
 const btnNext = document.getElementById('btn-next');
-const filterTypeGroup = document.getElementById('filter-type');
-const filterTeacher = document.getElementById('filter-teacher');
-const filterSpotsGroup = document.getElementById('filter-spots');
 const loadingIndicator = document.getElementById('loading-indicator');
 const errorState = document.getElementById('error-state');
 const btnRetry = document.getElementById('btn-retry');
@@ -97,10 +89,10 @@ function getBookingLink(session) {
 
 
 
-// Get the 7 dates of the active week starting from currentDate
+// Get the 4 dates of the active week starting from currentDate
 function getActiveWeekDates() {
   const dates = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 4; i++) {
     const d = new Date(currentDate);
     d.setDate(currentDate.getDate() + i);
     dates.push(d);
@@ -112,7 +104,7 @@ function getActiveWeekDates() {
 function updateDateRangeDisplay() {
   const dates = getActiveWeekDates();
   const start = formatHumanDate(dates[0]);
-  const end = formatHumanDate(dates[6]);
+  const end = formatHumanDate(dates[dates.length - 1]);
   const year = getBerlinDateParts(dates[0]).year;
   dateRangeDisplay.textContent = `${start} — ${end} ${year}`;
 }
@@ -145,7 +137,6 @@ async function fetchSchedule() {
     // Sort chronologically
     allSessions.sort((a, b) => new Date(a.startsAt) - new Date(b.startsAt));
     
-    populateTeacherFilter();
     applyFiltersAndRender();
     hideError();
   } catch (error) {
@@ -156,37 +147,7 @@ async function fetchSchedule() {
   }
 }
 
-// Dynamically populate the teacher dropdown from fetched data
-function populateTeacherFilter() {
-  const currentSelected = filterTeacher.value;
-  
-  // Clear options except the first "All"
-  filterTeacher.innerHTML = '<option value="all">All Instructors</option>';
-  
-  const teachers = new Set();
-  allSessions.forEach(session => {
-    if (session.teacher) {
-      teachers.add(cleanTeacherName(session.teacher));
-    }
-  });
-  
-  // Sort teachers alphabetically
-  const sortedTeachers = Array.from(teachers).sort();
-  sortedTeachers.forEach(teacher => {
-    const option = document.createElement('option');
-    option.value = teacher;
-    option.textContent = teacher;
-    filterTeacher.appendChild(option);
-  });
-  
-  // Restore selection if it still exists
-  if (teachers.has(currentSelected)) {
-    filterTeacher.value = currentSelected;
-  } else {
-    filterTeacher.value = 'all';
-    activeFilters.teacher = 'all';
-  }
-}
+
 
 // Determine if a session is "Special"
 function isSpecialEvent(session) {
@@ -217,25 +178,6 @@ function applyFiltersAndRender() {
     const endsAtTime = session.endsAt ? new Date(session.endsAt) : new Date(session.startsAt);
     if (isTodaySession && endsAtTime < now) {
       return false;
-    }
-    
-    // 2. Filter by Session Type
-    if (activeFilters.type === 'fitness') {
-      if (isSpecialEvent(session)) return false;
-    } else if (activeFilters.type === 'special') {
-      if (!isSpecialEvent(session)) return false;
-    }
-    
-    // 3. Filter by Instructor
-    if (activeFilters.teacher !== 'all') {
-      const sessionTeacher = cleanTeacherName(session.teacher);
-      if (sessionTeacher !== activeFilters.teacher) return false;
-    }
-    
-    // 4. Filter by Spots Availability
-    if (activeFilters.spots === 'available') {
-      const remaining = session.remainingSpots ? session.remainingSpots.remaining : 0;
-      if (remaining <= 0) return false;
     }
     
     return true;
@@ -269,7 +211,7 @@ function renderColumnsView() {
     
     const formattedHeaderDate = formatHumanDate(date);
     header.innerHTML = `
-      <div class="day-name">${isToday ? 'TODAY' : dateParts.weekday}</div>
+      <div class="day-name">${isToday ? `TODAY (${dateParts.weekday})` : dateParts.weekday}</div>
       <div class="day-date">${formattedHeaderDate}</div>
     `;
     scheduleColumnsView.appendChild(header);
@@ -290,12 +232,24 @@ function renderColumnsView() {
       scheduleColumnsView.appendChild(noClasses);
     }
     
-    // Render either the class card or an empty placeholder for every unique time slot
+    // Render either the class card or merged empty placeholders
+    let currentPlaceholderStart = null;
+    
     uniqueTimes.forEach((timeStr, timeIdx) => {
       const rowIndex = timeIdx + 2; // +2 offset for headers row
       const session = dayClasses.find(s => formatBerlinTime(s.startsAt) === timeStr);
       
       if (session) {
+        // If we were tracking an empty range, render the merged placeholder first
+        if (currentPlaceholderStart !== null) {
+          const placeholder = document.createElement('div');
+          placeholder.className = 'slot-placeholder';
+          placeholder.style.setProperty('--col-idx', colIndex);
+          placeholder.style.gridRow = `${currentPlaceholderStart} / ${rowIndex}`;
+          scheduleColumnsView.appendChild(placeholder);
+          currentPlaceholderStart = null;
+        }
+
         const item = document.createElement('a');
         item.href = getBookingLink(session);
         item.target = '_blank';
@@ -346,15 +300,21 @@ function renderColumnsView() {
 
         scheduleColumnsView.appendChild(item);
       } else {
-        // Render empty slot placeholder (visible only on desktop grid)
-        const placeholder = document.createElement('div');
-        placeholder.className = 'slot-placeholder';
-        placeholder.style.setProperty('--col-idx', colIndex);
-        placeholder.style.setProperty('--row-idx', rowIndex);
-        placeholder.innerHTML = `<span class="placeholder-time">${timeStr}</span>`;
-        scheduleColumnsView.appendChild(placeholder);
+        // Track the start of the empty placeholder range
+        if (currentPlaceholderStart === null) {
+          currentPlaceholderStart = rowIndex;
+        }
       }
     });
+
+    // Commit any trailing empty placeholder range at the end of the day
+    if (currentPlaceholderStart !== null) {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'slot-placeholder';
+      placeholder.style.setProperty('--col-idx', colIndex);
+      placeholder.style.gridRow = `${currentPlaceholderStart} / ${uniqueTimes.length + 2}`;
+      scheduleColumnsView.appendChild(placeholder);
+    }
   });
 }
 
@@ -383,13 +343,13 @@ function hideError() {
 function setupEventListeners() {
   // Navigation
   btnPrev.addEventListener('click', () => {
-    currentDate.setDate(currentDate.getDate() - 7);
+    currentDate.setDate(currentDate.getDate() - 4);
     updateDateRangeDisplay();
     fetchSchedule();
   });
 
   btnNext.addEventListener('click', () => {
-    currentDate.setDate(currentDate.getDate() + 7);
+    currentDate.setDate(currentDate.getDate() + 4);
     updateDateRangeDisplay();
     fetchSchedule();
   });
@@ -399,32 +359,6 @@ function setupEventListeners() {
     currentDate.setHours(0, 0, 0, 0);
     updateDateRangeDisplay();
     fetchSchedule();
-  });
-
-  // Type Filters
-  filterTypeGroup.addEventListener('click', (e) => {
-    if (e.target.classList.contains('pill')) {
-      filterTypeGroup.querySelectorAll('.pill').forEach(btn => btn.classList.remove('active'));
-      e.target.classList.add('active');
-      activeFilters.type = e.target.dataset.type;
-      applyFiltersAndRender();
-    }
-  });
-
-  // Teacher Filter
-  filterTeacher.addEventListener('change', (e) => {
-    activeFilters.teacher = e.target.value;
-    applyFiltersAndRender();
-  });
-
-  // Spots Filter
-  filterSpotsGroup.addEventListener('click', (e) => {
-    if (e.target.classList.contains('pill')) {
-      filterSpotsGroup.querySelectorAll('.pill').forEach(btn => btn.classList.remove('active'));
-      e.target.classList.add('active');
-      activeFilters.spots = e.target.dataset.spots;
-      applyFiltersAndRender();
-    }
   });
 
 
