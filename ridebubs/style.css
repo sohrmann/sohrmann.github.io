@@ -403,6 +403,92 @@ body {
   border-color: var(--text-muted);
 }
 
+/* Spots Progress Bar (Road-themed) */
+.spots-progress-bar {
+  width: 5rem;
+  height: 0.9rem;
+  background-color: #888888; /* Paler road */
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-left: 0.25rem;
+  position: relative;
+}
+
+.spots-progress-bar::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, #FAF9F6 50%, transparent 50%);
+  background-size: 5px 1px;
+  transform: translateY(-50%);
+  opacity: 0.6; /* More visible on pale background */
+  z-index: 1;
+}
+
+.class-item:hover .spots-progress-bar {
+  border-color: var(--text-muted);
+}
+
+.spots-progress-fill {
+  height: 100%;
+  background: var(--primary-gradient);
+  border-radius: 2px 0 0 2px;
+  position: relative;
+  z-index: 2;
+}
+
+.spots-progress-fill::after {
+  content: '🚴';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(50%, -50%) scaleX(-1);
+  font-size: 1.4rem; /* Prominent, visible cyclist scaled with the larger road */
+  line-height: 1;
+  z-index: 3;
+}
+
+/* Spots Custom Tooltip */
+.spots-tooltip {
+  position: absolute;
+  bottom: 155%; /* Display above the road and cyclist */
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  padding: 0.15rem 0.35rem;
+  border-radius: 3px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.spots-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: var(--text-primary) transparent transparent transparent;
+}
+
+.spots-progress-bar:hover .spots-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .spots-low {
   color: var(--accent-orange);
   border-color: var(--accent-orange-light);

@@ -261,26 +261,25 @@ function renderColumnsView() {
         
         // Spot configuration
         const remaining = session.remainingSpots ? session.remainingSpots.remaining : 0;
-        const total = session.remainingSpots ? session.remainingSpots.total : 33;
-        let spotsText = '';
-        let spotsClass = '';
+        const total = (session.remainingSpots && session.remainingSpots.total) ? session.remainingSpots.total : 33;
+        let spotsHtml = '';
         
         if (session.isCancelled) {
-          spotsText = 'CANCELLED';
-          spotsClass = 'spots-full';
+          spotsHtml = '<span class="spots-badge spots-full">CANCELLED</span>';
         } else if (remaining === 0) {
           if (session.allowWaitlist && !session.waitlistFull) {
-            spotsText = 'WAITLIST';
-            spotsClass = 'spots-waitlist';
+            spotsHtml = '<span class="spots-badge spots-waitlist">WAITLIST</span>';
           } else {
-            spotsText = 'FULL';
-            spotsClass = 'spots-full';
+            spotsHtml = '<span class="spots-badge spots-full">FULL</span>';
           }
-        } else if (remaining <= 5) {
-          spotsText = `${remaining} LEFT`;
-          spotsClass = 'spots-low';
         } else {
-          spotsText = `${remaining}/${total} SPOTS`;
+          const occupancy = total > 0 ? Math.round(((total - remaining) / total) * 100) : 0;
+          spotsHtml = `
+            <div class="spots-progress-bar">
+              <div class="spots-progress-fill" style="width: ${occupancy}%;"></div>
+              <span class="spots-tooltip">${remaining} spots left</span>
+            </div>
+          `;
         }
 
         const isSpecial = isSpecialEvent(session);
@@ -294,7 +293,7 @@ function renderColumnsView() {
           </div>
           <div class="class-instructor-row">
             <span class="class-instructor" title="${teacherNameOnly}">${teacherNameOnly}</span>
-            <span class="spots-badge ${spotsClass}">${spotsText}</span>
+            ${spotsHtml}
           </div>
         `;
 
