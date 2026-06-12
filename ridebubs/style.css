@@ -99,6 +99,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  flex-wrap: nowrap;
 }
 
 .date-range-display {
@@ -108,6 +109,8 @@ body {
   color: var(--text-primary);
   letter-spacing: -0.01em;
   padding: 0 0.15rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .text-btn {
@@ -119,6 +122,8 @@ body {
   cursor: pointer;
   padding: 0.15rem 0.35rem;
   transition: all var(--transition-speed);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .text-btn:hover {
@@ -569,5 +574,19 @@ body {
   
   .brand-logo {
     font-size: 1.1rem;
+  }
+  
+  .nav-section {
+    gap: 0.15rem;
+  }
+  
+  .date-range-display {
+    font-size: 0.85rem;
+    padding: 0 0.1rem;
+  }
+  
+  .text-btn {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.25rem;
   }
 }
