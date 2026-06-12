@@ -1,9 +1,9 @@
-const CACHE_NAME = "cinebubs-v1";
+const CACHE_NAME = "ridebubs-v1";
 const ASSETS = [
   "./",
   "./index.html",
   "./style.css",
-  "./script.js",
+  "./app.js",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png"
