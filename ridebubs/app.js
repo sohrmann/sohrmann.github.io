@@ -260,8 +260,10 @@ function renderColumnsView() {
         item.setAttribute('aria-label', `Book ${session.sessionName} with ${cleanTeacherName(session.teacher)} at ${timeStr}`);
         
         // Spot configuration
-        const remaining = session.remainingSpots ? session.remainingSpots.remaining : 0;
-        const total = (session.remainingSpots && session.remainingSpots.total) ? session.remainingSpots.total : 33;
+        const total = (session.remainingSpots && session.remainingSpots.total) ? session.remainingSpots.total : (session.capacity || 33);
+        const remaining = (session.remainingSpots && typeof session.remainingSpots.remaining === 'number') 
+          ? session.remainingSpots.remaining 
+          : Math.max(0, total - (session.ticketsSold || 0));
         let spotsHtml = '';
         
         if (session.isCancelled) {
