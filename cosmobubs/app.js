@@ -460,9 +460,6 @@ function renderEvents() {
         seatStatusLabel = `🟡 Noch ${ev.freeSeats} Plätze`;
       }
 
-      // Room badge
-      const roomClass = ev.isDome ? "dome" : "cinema";
-      const roomText = ev.isDome ? "Kuppel" : ev.isCinema ? "Kino" : ev.room;
 
       // Fallback thumbnail if missing
       const thumbUrl =
@@ -488,9 +485,7 @@ function renderEvents() {
             <div class="card-top-line">
               <span class="card-time">${ev.timeStr}</span>
               <span class="card-duration">${ev.durationMins}m</span>
-              <span class="meta-sep">•</span>
-              <span class="card-room-badge ${roomClass}">${escapeHtml(roomText)}</span>
-              ${state.filters.date === "all" ? `<span class="card-date-badge">${formatDisplayDate(ev.dateStr)}</span>` : ""}
+              ${state.filters.date === "all" ? `<span class="meta-sep">•</span><span class="card-date-badge">${formatDisplayDate(ev.dateStr)}</span>` : ""}
             </div>
 
             <h3 class="card-title" title="${escapeHtml(ev.title)}">${escapeHtml(ev.title)}</h3>
@@ -498,7 +493,6 @@ function renderEvents() {
 
             <div class="card-bottom-line">
               <span class="seats-status ${seatStatusClass}">${seatStatusLabel}</span>
-              ${ev.ageLimit ? `<span class="card-age-pill">${escapeHtml(ev.ageLimit)}</span>` : ""}
             </div>
           </div>
 

@@ -649,22 +649,6 @@ body {
   font-size: 0.65rem;
 }
 
-.card-room-badge {
-  font-weight: 600;
-  font-size: 0.68rem;
-  padding: 1px 6px;
-  border-radius: var(--radius-full);
-}
-
-.card-room-badge.dome {
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.12);
-}
-
-.card-room-badge.cinema {
-  color: #f472b6;
-  background: rgba(244, 114, 182, 0.12);
-}
 
 .card-date-badge {
   font-size: 0.68rem;
@@ -714,13 +698,6 @@ body {
 .seats-status.soldout { color: var(--status-soldout); }
 .seats-status.free-entrance { color: #38bdf8; }
 
-.card-age-pill {
-  font-size: 0.66rem;
-  color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.06);
-  padding: 1px 5px;
-  border-radius: var(--radius-full);
-}
 
 /* Action Column */
 .card-action-col {
