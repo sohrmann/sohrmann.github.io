@@ -541,6 +541,82 @@ body {
   }
 }
 
+/* Static Day Divider (for Alle tab, grouped like ridebubs) */
+.day-divider {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  margin-top: 14px;
+  margin-bottom: 2px;
+  background: linear-gradient(90deg, rgba(0, 242, 254, 0.08) 0%, rgba(14, 18, 36, 0.55) 100%);
+  border-left: 3px solid var(--cyan-bright);
+  border-radius: var(--radius-sm);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  user-select: none;
+}
+
+.day-divider:first-of-type {
+  margin-top: 2px;
+}
+
+.day-divider.is-today {
+  background: linear-gradient(90deg, rgba(251, 191, 36, 0.12) 0%, rgba(14, 18, 36, 0.55) 100%);
+  border-left-color: var(--gold-accent);
+}
+
+.day-divider.is-today .day-divider-prefix {
+  color: var(--gold-accent);
+}
+
+.day-divider.is-tomorrow {
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.12) 0%, rgba(14, 18, 36, 0.55) 100%);
+  border-left-color: #818cf8;
+}
+
+.day-divider.is-tomorrow .day-divider-prefix {
+  color: #a5b4fc;
+}
+
+.day-divider-left {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.day-divider-prefix {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--cyan-bright);
+}
+
+.day-divider-sep {
+  color: rgba(255, 255, 255, 0.22);
+  font-size: 0.72rem;
+}
+
+.day-divider-date {
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.day-divider-count {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
 /* Event Card - Compact Row */
 .event-card {
   background: var(--bg-surface-glass);
@@ -643,23 +719,6 @@ body {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--text-muted);
-}
-
-.meta-sep {
-  color: rgba(255, 255, 255, 0.22);
-  font-size: 0.65rem;
-}
-
-.card-date-badge {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #cbd5e1;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1px 6px;
-  border-radius: var(--radius-sm);
-  white-space: nowrap;
-  letter-spacing: 0.01em;
 }
 
 .card-title {

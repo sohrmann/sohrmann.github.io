@@ -410,6 +410,30 @@ function applyFilters() {
   renderEvents();
 }
 
+function formatGroupHeader(dateStr) {
+  const todayStr = getBerlinDateString(new Date());
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = getBerlinDateString(tomorrow);
+
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const dateObj = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+
+  const weekdayShort = new Intl.DateTimeFormat("de-DE", { weekday: "short" }).format(dateObj).toUpperCase();
+  const fullDate = new Intl.DateTimeFormat("de-DE", { day: "numeric", month: "long" }).format(dateObj);
+
+  let prefix = weekdayShort;
+  if (dateStr === todayStr) prefix = "HEUTE";
+  else if (dateStr === tomorrowStr) prefix = "MORGEN";
+
+  return {
+    prefix,
+    dateText: fullDate,
+    isToday: dateStr === todayStr,
+    isTomorrow: dateStr === tomorrowStr
+  };
+}
+
 // Render Event Cards
 function renderEvents() {
   const count = state.filteredEvents.length;
@@ -440,80 +464,40 @@ function renderEvents() {
 
   elements.emptyState.classList.add("hidden");
 
-  const cardsHtml = state.filteredEvents
-    .map((ev, index) => {
-      // Seat availability logic
-      const isSoldOut = ev.totalSeats > 0 && ev.freeSeats === 0;
-      const isLow = ev.totalSeats > 0 && (ev.freeSeats <= 20 || ev.freeSeats / ev.totalSeats < 0.15);
+  let cardsHtml = "";
 
-      let seatStatusClass = "available";
-      let seatStatusLabel = `🟢 ${ev.freeSeats} frei`;
-
-      if (ev.isFreeEntrance) {
-        seatStatusClass = "free-entrance";
-        seatStatusLabel = "🎟️ Freier Eintritt";
-      } else if (isSoldOut) {
-        seatStatusClass = "soldout";
-        seatStatusLabel = "🔴 Ausverkauft";
-      } else if (isLow) {
-        seatStatusClass = "low";
-        seatStatusLabel = `🟡 Noch ${ev.freeSeats} Plätze`;
+  if (state.filters.date === "all") {
+    // Group events by dateStr for static day dividers (like ridebubs)
+    const groups = new Map();
+    state.filteredEvents.forEach((ev, index) => {
+      if (!groups.has(ev.dateStr)) {
+        groups.set(ev.dateStr, []);
       }
+      groups.get(ev.dateStr).push({ ev, index });
+    });
 
+    for (const [dateStr, items] of groups.entries()) {
+      const headerInfo = formatGroupHeader(dateStr);
+      const modifierClass = headerInfo.isToday ? "is-today" : headerInfo.isTomorrow ? "is-tomorrow" : "";
 
-      // Fallback thumbnail if missing
-      const thumbUrl =
-        ev.thumbnail ||
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100%25' height='100%25' fill='%230f1429'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='36'%3E🪐%3C/text%3E%3C/svg%3E";
-
-      return `
-        <article class="event-card ${ev.isAnnualPass ? "card-annual-pass" : ""}" data-index="${index}">
-          <!-- Compact Thumbnail -->
-          <div class="card-thumb-col" data-action="open-detail" data-index="${index}">
-            <img 
-              src="${thumbUrl}" 
-              alt="${escapeHtml(ev.title)}" 
-              class="card-thumb" 
-              loading="lazy" 
-              onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100\\' height=\\'100\\' viewBox=\\'0 0 100 100\\'%3E%3Crect width=\\'100%25\\' height=\\'100%25\\' fill=\\'%230f1429\\'/ %3E%3Ctext x=\\'50%25\\' y=\\'55%25\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' font-size=\\'36\\'%3E🪐%3C/text%3E%3C/svg%3E'"
-            />
-            ${ev.isAnnualPass ? `<span class="badge-star-mini" title="Jahreskarte">⭐</span>` : ""}
+      cardsHtml += `
+        <div class="day-divider ${modifierClass}">
+          <div class="day-divider-left">
+            <span class="day-divider-prefix">${headerInfo.prefix}</span>
+            <span class="day-divider-sep">•</span>
+            <span class="day-divider-date">${headerInfo.dateText}</span>
           </div>
-
-          <!-- Main Info Column (Clickable to open modal) -->
-          <div class="card-main-col" data-action="open-detail" data-index="${index}">
-            <div class="card-top-line">
-              <span class="card-time">${ev.timeStr}</span>
-              <span class="card-duration">${ev.durationMins}m</span>
-              ${state.filters.date === "all" ? `<span class="meta-sep">•</span><span class="card-date-badge">${formatDisplayDate(ev.dateStr)}</span>` : ""}
-            </div>
-
-            <h3 class="card-title" title="${escapeHtml(ev.title)}">${escapeHtml(ev.title)}</h3>
-            ${ev.subtitle ? `<p class="card-subtitle">${escapeHtml(ev.subtitle)}</p>` : ""}
-
-            <div class="card-bottom-line">
-              <span class="seats-status ${seatStatusClass}">${seatStatusLabel}</span>
-            </div>
-          </div>
-
-          <!-- Compact Action Column -->
-          <div class="card-action-col">
-            ${
-              isSoldOut
-                ? `<span class="btn-book-compact sold-out" title="Ausverkauft">Voll</span>`
-                : `<a href="${ev.ticketUrl}" target="_blank" rel="noopener" class="btn-book-compact" title="Tickets buchen">
-                    <span>Tickets</span>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                      <polyline points="15 3 21 3 21 9"></polyline>
-                    </svg>
-                  </a>`
-            }
-          </div>
-        </article>
+          <span class="day-divider-count">${items.length} ${items.length === 1 ? "Show" : "Shows"}</span>
+        </div>
       `;
-    })
-    .join("");
+
+      cardsHtml += items.map(({ ev, index }) => renderEventCard(ev, index)).join("");
+    }
+  } else {
+    cardsHtml = state.filteredEvents
+      .map((ev, index) => renderEventCard(ev, index))
+      .join("");
+  }
 
   elements.eventsGrid.innerHTML = cardsHtml;
 
@@ -525,6 +509,77 @@ function renderEvents() {
       openModal(state.filteredEvents[idx]);
     });
   });
+}
+
+// Single Event Card Generator
+function renderEventCard(ev, index) {
+  // Seat availability logic
+  const isSoldOut = ev.totalSeats > 0 && ev.freeSeats === 0;
+  const isLow = ev.totalSeats > 0 && (ev.freeSeats <= 20 || ev.freeSeats / ev.totalSeats < 0.15);
+
+  let seatStatusClass = "available";
+  let seatStatusLabel = `🟢 ${ev.freeSeats} frei`;
+
+  if (ev.isFreeEntrance) {
+    seatStatusClass = "free-entrance";
+    seatStatusLabel = "🎟️ Freier Eintritt";
+  } else if (isSoldOut) {
+    seatStatusClass = "soldout";
+    seatStatusLabel = "🔴 Ausverkauft";
+  } else if (isLow) {
+    seatStatusClass = "low";
+    seatStatusLabel = `🟡 Noch ${ev.freeSeats} Plätze`;
+  }
+
+  const thumbUrl =
+    ev.thumbnail ||
+    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100%25' height='100%25' fill='%230f1429'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='36'%3E🪐%3C/text%3E%3C/svg%3E";
+
+  return `
+    <article class="event-card ${ev.isAnnualPass ? "card-annual-pass" : ""}" data-index="${index}">
+      <!-- Compact Thumbnail -->
+      <div class="card-thumb-col" data-action="open-detail" data-index="${index}">
+        <img 
+          src="${thumbUrl}" 
+          alt="${escapeHtml(ev.title)}" 
+          class="card-thumb" 
+          loading="lazy" 
+          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100\\' height=\\'100\\' viewBox=\\'0 0 100 100\\'%3E%3Crect width=\\'100%25\\' height=\\'100%25\\' fill=\\'%230f1429\\'/ %3E%3Ctext x=\\'50%25\\' y=\\'55%25\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' font-size=\\'36\\'%3E🪐%3C/text%3E%3C/svg%3E'"
+        />
+        ${ev.isAnnualPass ? `<span class="badge-star-mini" title="Jahreskarte">⭐</span>` : ""}
+      </div>
+
+      <!-- Main Info Column (Clickable to open modal) -->
+      <div class="card-main-col" data-action="open-detail" data-index="${index}">
+        <div class="card-top-line">
+          <span class="card-time">${ev.timeStr}</span>
+          <span class="card-duration">${ev.durationMins}m</span>
+        </div>
+
+        <h3 class="card-title" title="${escapeHtml(ev.title)}">${escapeHtml(ev.title)}</h3>
+        ${ev.subtitle ? `<p class="card-subtitle">${escapeHtml(ev.subtitle)}</p>` : ""}
+
+        <div class="card-bottom-line">
+          <span class="seats-status ${seatStatusClass}">${seatStatusLabel}</span>
+        </div>
+      </div>
+
+      <!-- Compact Action Column -->
+      <div class="card-action-col">
+        ${
+          isSoldOut
+            ? `<span class="btn-book-compact sold-out" title="Ausverkauft">Voll</span>`
+            : `<a href="${ev.ticketUrl}" target="_blank" rel="noopener" class="btn-book-compact" title="Tickets buchen">
+                <span>Tickets</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                </svg>
+              </a>`
+        }
+      </div>
+    </article>
+  `;
 }
 
 // Modal Detail View
