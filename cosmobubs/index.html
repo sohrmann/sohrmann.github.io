@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>COSMOBUBS | Zeiss-Großplanetarium Berlin Jahreskarte Spielplan</title>
+  <meta name="description" content="Spielplan und freie Plätze für das Zeiss-Großplanetarium in Berlin (Prenzlauer Berg) mit Jahreskarten-Filter und Direktbuchung." />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Icons & PWA -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🪐</text></svg>" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#070913" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="cosmos-bg" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-row">
+        <div class="brand-info">
+          <div class="brand-title-wrap">
+            <span class="brand-icon">🪐</span>
+            <h1 class="brand-logo">COSMO<span class="gradient-text">BUBS</span></h1>
+          </div>
+          <p class="brand-tagline">
+            <span class="venue-badge">ZEISS-GROSSPLANETARIUM</span>
+            <span class="location-text">Prenzlauer Berg • Berlin</span>
+          </p>
+        </div>
+
+        <div class="header-actions">
+          <!-- Jahreskarte Toggle Button -->
+          <button id="btn-toggle-annual" class="annual-pass-toggle active" aria-pressed="true">
+            <span class="star-icon">⭐</span>
+            <span class="toggle-text-wrap">
+              <span class="toggle-title">JAHRESKARTE</span>
+              <span class="toggle-status" id="annual-badge-count">Lade...</span>
+            </span>
+            <span class="toggle-switch-indicator"></span>
+          </button>
+
+          <button id="btn-refresh" class="icon-btn" title="Aktualisieren" aria-label="Daten neu laden">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.19"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Date Navigator Scroller -->
+      <nav class="date-navigator" aria-label="Datumsauswahl">
+        <button id="btn-date-prev" class="date-scroll-nav-btn left" aria-label="Vorherige Tage" title="Zurück">
+          ‹
+        </button>
+        <div class="date-scroller" id="date-scroller">
+          <!-- Dynamically populated with date buttons -->
+        </div>
+        <button id="btn-date-next" class="date-scroll-nav-btn right" aria-label="Nächste Tage" title="Weiter">
+          ›
+        </button>
+      </nav>
+    </header>
+
+    <!-- Main Schedule Content -->
+    <main class="main-content">
+      <!-- Active Status & Counter Bar -->
+      <div class="status-summary-bar">
+        <div class="summary-left">
+          <span id="results-count" class="results-count">Lade Programm...</span>
+          <span id="results-subtext" class="results-subtext"></span>
+        </div>
+        <div class="summary-right">
+          <button id="btn-reset-filters" class="reset-filters-btn hidden">Alle Termine anzeigen</button>
+        </div>
+      </div>
+
+      <!-- Skeleton Loading View -->
+      <div id="loading-state" class="events-grid skeleton-grid">
+        <div class="skeleton-card">
+          <div class="skeleton-thumb"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line line-sm"></div>
+            <div class="skeleton-line line-lg"></div>
+            <div class="skeleton-line line-md"></div>
+            <div class="skeleton-line line-btn"></div>
+          </div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton-thumb"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line line-sm"></div>
+            <div class="skeleton-line line-lg"></div>
+            <div class="skeleton-line line-md"></div>
+            <div class="skeleton-line line-btn"></div>
+          </div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton-thumb"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line line-sm"></div>
+            <div class="skeleton-line line-lg"></div>
+            <div class="skeleton-line line-md"></div>
+            <div class="skeleton-line line-btn"></div>
+          </div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton-thumb"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line line-sm"></div>
+            <div class="skeleton-line line-lg"></div>
+            <div class="skeleton-line line-md"></div>
+            <div class="skeleton-line line-btn"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div id="error-state" class="error-container hidden">
+        <div class="error-icon">📡</div>
+        <h3>Verbindung fehlgeschlagen</h3>
+        <p id="error-message">Die Daten vom Zeiss-Großplanetarium konnten nicht geladen werden.</p>
+        <button id="btn-retry" class="action-btn retry-btn">Erneut versuchen</button>
+      </div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="empty-container hidden">
+        <div class="empty-icon">🔭</div>
+        <h3>Keine Vorstellungen gefunden</h3>
+        <p id="empty-message">Für die gewählten Filter oder das Datum gibt es im Zeiss-Großplanetarium aktuell keine Vorstellungen.</p>
+        <button id="btn-empty-reset" class="action-btn secondary-btn">Alle Termine anzeigen</button>
+      </div>
+
+      <!-- Events Schedule Grid -->
+      <div id="events-grid" class="events-grid">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </main>
+
+    <!-- Event Detail Modal -->
+    <div id="detail-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-dialog">
+        <button id="modal-close-btn" class="modal-close" aria-label="Schließen">✕</button>
+        <div class="modal-content" id="modal-content">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-inner">
+        <p>COSMOBUBS • Inoffizielle PWA für das Zeiss-Großplanetarium Berlin</p>
+        <p class="footer-sub">Live-Daten direkt von <a href="https://www.planetarium.berlin" target="_blank" rel="noopener">planetarium.berlin</a> & Beckerbillett</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
