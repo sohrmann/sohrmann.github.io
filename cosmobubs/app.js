@@ -445,10 +445,9 @@ function renderEvents() {
       // Seat availability logic
       const isSoldOut = ev.totalSeats > 0 && ev.freeSeats === 0;
       const isLow = ev.totalSeats > 0 && (ev.freeSeats <= 20 || ev.freeSeats / ev.totalSeats < 0.15);
-      const seatPercent = ev.totalSeats > 0 ? Math.min(100, Math.round((ev.freeSeats / ev.totalSeats) * 100)) : 100;
 
       let seatStatusClass = "available";
-      let seatStatusLabel = `🟢 ${ev.freeSeats} / ${ev.totalSeats} Plätze frei`;
+      let seatStatusLabel = `🟢 ${ev.freeSeats} frei`;
 
       if (ev.isFreeEntrance) {
         seatStatusClass = "free-entrance";
@@ -458,99 +457,64 @@ function renderEvents() {
         seatStatusLabel = "🔴 Ausverkauft";
       } else if (isLow) {
         seatStatusClass = "low";
-        seatStatusLabel = `🟡 Nur noch ${ev.freeSeats} Plätze!`;
+        seatStatusLabel = `🟡 Noch ${ev.freeSeats} Plätze`;
       }
 
       // Room badge
       const roomClass = ev.isDome ? "dome" : "cinema";
-      const roomIcon = ev.isDome ? "🌌" : "🎬";
-      const roomText = ev.isDome ? "Kuppelsaal" : ev.isCinema ? "Kinosaal" : ev.room;
+      const roomText = ev.isDome ? "Kuppel" : ev.isCinema ? "Kino" : ev.room;
 
       // Fallback thumbnail if missing
       const thumbUrl =
         ev.thumbnail ||
-        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='100%25' height='100%25' fill='%230f1429'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='48' fill='%236366f1'%3E🪐%3C/text%3E%3C/svg%3E";
+        "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100%25' height='100%25' fill='%230f1429'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-size='36'%3E🪐%3C/text%3E%3C/svg%3E";
 
       return `
         <article class="event-card ${ev.isAnnualPass ? "card-annual-pass" : ""}" data-index="${index}">
-          <div class="card-media">
+          <!-- Compact Thumbnail -->
+          <div class="card-thumb-col" data-action="open-detail" data-index="${index}">
             <img 
               src="${thumbUrl}" 
               alt="${escapeHtml(ev.title)}" 
-              class="card-image" 
+              class="card-thumb" 
               loading="lazy" 
-              onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'400\\' height=\\'225\\' viewBox=\\'0 0 400 225\\'%3E%3Crect width=\\'100%25\\' height=\\'100%25\\' fill=\\'%230f1429\\'/ %3E%3Ctext x=\\'50%25\\' y=\\'50%25\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' font-size=\\'48\\'%3E🪐%3C/text%3E%3C/svg%3E'"
+              onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100\\' height=\\'100\\' viewBox=\\'0 0 100 100\\'%3E%3Crect width=\\'100%25\\' height=\\'100%25\\' fill=\\'%230f1429\\'/ %3E%3Ctext x=\\'50%25\\' y=\\'55%25\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' font-size=\\'36\\'%3E🪐%3C/text%3E%3C/svg%3E'"
             />
-            <div class="card-media-overlay"></div>
+            ${ev.isAnnualPass ? `<span class="badge-star-mini" title="Jahreskarte">⭐</span>` : ""}
+          </div>
 
-            <div class="floating-badges-top">
-              ${
-                ev.isAnnualPass
-                  ? `<span class="badge-annual">⭐ JAHRESKARTE</span>`
-                  : `<span></span>`
-              }
-              <span class="badge-room ${roomClass}">
-                <span>${roomIcon}</span> ${escapeHtml(roomText)}
-              </span>
+          <!-- Main Info Column (Clickable to open modal) -->
+          <div class="card-main-col" data-action="open-detail" data-index="${index}">
+            <div class="card-top-line">
+              <span class="card-time">${ev.timeStr}</span>
+              <span class="card-duration">${ev.durationMins}m</span>
+              <span class="meta-sep">•</span>
+              <span class="card-room-badge ${roomClass}">${escapeHtml(roomText)}</span>
+              ${state.filters.date === "all" ? `<span class="card-date-badge">${formatDisplayDate(ev.dateStr)}</span>` : ""}
             </div>
 
-            <div class="floating-badges-bottom">
-              ${ev.ageLimit ? `<span class="badge-pill">${escapeHtml(ev.ageLimit)}</span>` : ""}
-              <span class="badge-pill">⏱️ ${ev.durationMins} Min.</span>
+            <h3 class="card-title" title="${escapeHtml(ev.title)}">${escapeHtml(ev.title)}</h3>
+            ${ev.subtitle ? `<p class="card-subtitle">${escapeHtml(ev.subtitle)}</p>` : ""}
+
+            <div class="card-bottom-line">
+              <span class="seats-status ${seatStatusClass}">${seatStatusLabel}</span>
+              ${ev.ageLimit ? `<span class="card-age-pill">${escapeHtml(ev.ageLimit)}</span>` : ""}
             </div>
           </div>
 
-          <div class="card-body">
-            <div class="card-title-block">
-              <h3 class="card-title" title="${escapeHtml(ev.title)}">${escapeHtml(ev.title)}</h3>
-              ${ev.subtitle ? `<p class="card-subtitle">${escapeHtml(ev.subtitle)}</p>` : ""}
-            </div>
-
-            <div class="card-schedule-info">
-              <div class="time-slot">
-                <span class="time-start">${ev.timeStr}</span>
-                <span class="time-duration">bis ${ev.endTimeStr}</span>
-              </div>
-              <span class="date-label">${formatDisplayDate(ev.dateStr)}</span>
-            </div>
-
-            <div class="card-seats-wrapper">
-              <div class="seats-header">
-                <span class="seats-status-text ${seatStatusClass}">${seatStatusLabel}</span>
-                ${ev.totalSeats > 0 && !ev.isFreeEntrance ? `<span class="seats-count-num">${seatPercent}%</span>` : ""}
-              </div>
-              ${
-                ev.totalSeats > 0 && !ev.isFreeEntrance
-                  ? `
-                <div class="seats-progress-track">
-                  <div class="seats-progress-bar ${seatStatusClass}" style="width: ${seatPercent}%"></div>
-                </div>
-              `
-                  : ""
-              }
-            </div>
-
-            <div class="card-actions">
-              ${
-                isSoldOut
-                  ? `<button class="btn-book sold-out" disabled>Ausverkauft</button>`
-                  : `<a href="${ev.ticketUrl}" target="_blank" rel="noopener" class="btn-book">
-                      <span>Tickets buchen</span>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                        <polyline points="15 3 21 3 21 9"></polyline>
-                        <line x1="10" y1="14" x2="21" y2="3"></line>
-                      </svg>
-                    </a>`
-              }
-              <button class="btn-info" data-action="open-detail" data-index="${index}" title="Details anzeigen" aria-label="Details anzeigen">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="16" x2="12" y2="12"></line>
-                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                </svg>
-              </button>
-            </div>
+          <!-- Compact Action Column -->
+          <div class="card-action-col">
+            ${
+              isSoldOut
+                ? `<span class="btn-book-compact sold-out" title="Ausverkauft">Voll</span>`
+                : `<a href="${ev.ticketUrl}" target="_blank" rel="noopener" class="btn-book-compact" title="Tickets buchen">
+                    <span>Tickets</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                      <polyline points="15 3 21 3 21 9"></polyline>
+                    </svg>
+                  </a>`
+            }
           </div>
         </article>
       `;
