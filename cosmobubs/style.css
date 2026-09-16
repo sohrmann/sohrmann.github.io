@@ -626,9 +626,10 @@ body {
 .card-top-line {
   display: flex;
   align-items: center;
-  gap: 5px;
-  flex-wrap: wrap;
+  gap: 6px;
   font-size: 0.74rem;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .card-time {
@@ -645,19 +646,20 @@ body {
 }
 
 .meta-sep {
-  color: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.22);
   font-size: 0.65rem;
 }
 
-
 .card-date-badge {
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.05);
-  padding: 1px 5px;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1px 6px;
   border-radius: var(--radius-sm);
-  margin-left: auto;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
 }
 
 .card-title {

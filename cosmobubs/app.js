@@ -347,7 +347,7 @@ function renderDateTabs() {
     <button class="date-tab ${state.filters.date === "all" ? "active" : ""}" data-date="all">
       <span class="date-day-label">ALLE</span>
       <span class="date-number">Alle</span>
-      <span class="date-count-badge">${candidateEvents.length}</span>
+      <span class="date-count-badge">${candidateEvents.length} Shows</span>
     </button>
   `;
 

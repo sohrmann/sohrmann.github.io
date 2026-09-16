@@ -1,4 +1,4 @@
-const CACHE_NAME = "cosmobubs-v5";
+const CACHE_NAME = "cosmobubs-v6";
 const STATIC_ASSETS = [
   "./",
   "./index.html",
