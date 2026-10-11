@@ -1,8 +1,10 @@
 {
+  "id": "/cinebubs/",
   "name": "CineBubs Berlin",
   "short_name": "CineBubs",
   "description": "Original Version (OmU/OV/OmeU) showtimes at Blauer Stern & Kino International",
-  "start_url": "./index.html",
+  "start_url": "/cinebubs/",
+  "scope": "/cinebubs/",
   "display": "standalone",
   "background_color": "#fcfbfe",
   "theme_color": "#ec4899",

@@ -60,7 +60,7 @@ function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker
-        .register("./sw.js")
+        .register("./sw.js", { scope: "/cosmobubs/" })
         .then((reg) => {
           reg.update();
           console.log("[CosmoBubs] Service Worker registered");

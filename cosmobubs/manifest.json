@@ -1,8 +1,10 @@
 {
+  "id": "/cosmobubs/",
   "name": "CosmoBubs - Zeiss Planetarium Berlin",
   "short_name": "CosmoBubs",
   "description": "Zeiss-Großplanetarium Berlin Jahreskarte schedule, live seats & instant ticket bookings",
-  "start_url": "./index.html",
+  "start_url": "/cosmobubs/",
+  "scope": "/cosmobubs/",
   "display": "standalone",
   "background_color": "#070913",
   "theme_color": "#0a0e1a",
