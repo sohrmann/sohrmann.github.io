@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bubs.page &middot; Personal Hub</title>
+  <meta name="description" content="Personal collection of Progressive Web Apps and tools by Bubs.">
+  <meta name="theme-color" content="#121316">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
+  <style>
+    :root {
+      --bg: #0f1013;
+      --card-bg: #18191f;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover-border: rgba(255, 255, 255, 0.2);
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f8f9fa;
+        --card-bg: #ffffff;
+        --card-border: rgba(0, 0, 0, 0.08);
+        --card-hover-border: rgba(0, 0, 0, 0.2);
+        --text: #111827;
+        --text-muted: #6b7280;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-family);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.25rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 840px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .brand-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, #f97316 0%, #ec4899 50%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .brand-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--card-hover-border);
+      box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.25);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .icon-wrapper {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .badge {
+      font-size: 0.725rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+    }
+
+    .card-content h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .card-content p {
+      font-size: 0.9rem;
+      line-height: 1.45;
+      color: var(--text-muted);
+    }
+
+    .arrow {
+      opacity: 0;
+      transform: translateX(-4px);
+      transition: all 0.2s ease;
+      font-size: 1rem;
+    }
+
+    .card:hover .arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* App specific accent badges */
+    .recipes .icon-wrapper { background: rgba(224, 90, 47, 0.15); }
+    .recipes .badge { background: rgba(224, 90, 47, 0.15); color: #e05a2f; }
+
+    .cine .icon-wrapper { background: rgba(236, 72, 153, 0.15); }
+    .cine .badge { background: rgba(236, 72, 153, 0.15); color: #ec4899; }
+
+    .cosmo .icon-wrapper { background: rgba(59, 130, 246, 0.15); }
+    .cosmo .badge { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+
+    .ride .icon-wrapper { background: rgba(255, 107, 53, 0.15); }
+    .ride .badge { background: rgba(255, 107, 53, 0.15); color: #ff6b35; }
+
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      opacity: 0.75;
+    }
+
+    footer a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1 class="brand-title">bubs.page</h1>
+      <p class="brand-subtitle">Personal web apps &amp; tools</p>
+    </header>
+
+    <div class="grid">
+      <!-- Recipes -->
+      <a href="https://recipes.bubs.page" class="card recipes">
+        <div class="card-top">
+          <div class="icon-wrapper">🍲</div>
+          <span class="badge">Kitchen PWA</span>
+        </div>
+        <div class="card-content">
+          <h2>Bubs Recipes <span class="arrow">&rarr;</span></h2>
+          <p>Personal Cooklang recipe collection with live interactive checklist, cooking mode, and offline kitchen support.</p>
+        </div>
+      </a>
+
+      <!-- CineBubs -->
+      <a href="https://cine.bubs.page" class="card cine">
+        <div class="card-top">
+          <div class="icon-wrapper">🎬</div>
+          <span class="badge">Cinema PWA</span>
+        </div>
+        <div class="card-content">
+          <h2>CineBubs <span class="arrow">&rarr;</span></h2>
+          <p>Original-version (OmU / OV) showtimes tracker for Blauer Stern, Kino International &amp; Filmtheater am Friedrichshain.</p>
+        </div>
+      </a>
+
+      <!-- CosmoBubs -->
+      <a href="https://cosmo.bubs.page" class="card cosmo">
+        <div class="card-top">
+          <div class="icon-wrapper">🌌</div>
+          <span class="badge">Planetarium PWA</span>
+        </div>
+        <div class="card-content">
+          <h2>CosmoBubs <span class="arrow">&rarr;</span></h2>
+          <p>Zeiss-Großplanetarium Berlin schedule, Jahreskarte showtimes viewer, and real-time ticket availability.</p>
+        </div>
+      </a>
+
+      <!-- RideBubs -->
+      <a href="https://ride.bubs.page" class="card ride">
+        <div class="card-top">
+          <div class="icon-wrapper">🚴</div>
+          <span class="badge">Cycling PWA</span>
+        </div>
+        <div class="card-content">
+          <h2>RideBubs <span class="arrow">&rarr;</span></h2>
+          <p>Weekly indoor cycling schedule viewer, spot availability tracker, and studio ride viewer for Ride.bln.</p>
+        </div>
+      </a>
+    </div>
+
+    <footer>
+      <p>bubs.page &middot; Hosted on GitHub Pages</p>
+    </footer>
+  </div>
+</body>
+</html>
